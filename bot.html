@@ -30,8 +30,7 @@
       position: absolute;
       animation: floatAnimation 10s ease-in-out infinite;
       opacity: 0.4;
-      width: 600px;  /* Fixed width for all images */
-      height: 600px; /* Fixed height so we can do collision detection */
+      /* No fixed width/height so images keep their natural dimensions */
     }
     @keyframes floatAnimation {
       0%   { transform: translateY(0) rotate(0deg); }
@@ -113,12 +112,10 @@
     // Get the floating container element.
     const floatingContainer = document.getElementById('floating-container');
 
-    // Array to keep track of placed image boxes.
+    // Array to keep track of placed image bounding boxes.
     const placedPositions = [];
-    const IMAGE_WIDTH = 600;
-    const IMAGE_HEIGHT = 600;
 
-    // Helper function to check if two boxes overlap.
+    // Helper function to check if two rectangles overlap.
     function isOverlapping(boxA, boxB) {
       return !(
         boxA.left + boxA.width <= boxB.left ||
@@ -128,55 +125,68 @@
       );
     }
 
-    // Generate a random position that does not overlap with any existing boxes.
-    function getNonOverlappingPosition(imageWidth, imageHeight) {
-      const maxLeft = window.innerWidth - imageWidth;
-      const maxTop = window.innerHeight - imageHeight;
+    // Generate a random non-overlapping position for an image with given dimensions.
+    function getNonOverlappingPosition(imgWidth, imgHeight) {
+      const maxLeft = window.innerWidth - imgWidth;
+      const maxTop = window.innerHeight - imgHeight;
       let left, top;
       let attempts = 0;
       do {
         left = Math.random() * maxLeft;
         top = Math.random() * maxTop;
         attempts++;
-        // If too many attempts, break out to avoid an infinite loop.
-        if (attempts > 1000) break;
+        if (attempts > 1000) break; // prevent infinite loops
       } while (
         placedPositions.some(box =>
-          isOverlapping(box, { left, top, width: imageWidth, height: imageHeight })
+          isOverlapping(box, { left, top, width: imgWidth, height: imgHeight })
         )
       );
       return { left, top };
     }
 
-    // If a bot is specified and its images exist in the map, create floating image elements.
+    // Create and position an image element.
+    function createFloatingImage(src) {
+      const img = document.createElement('img');
+      img.src = src;
+      img.className = 'floating-img';
+      
+      // Once the image loads, measure its dimensions and position it.
+      img.onload = function() {
+        // Use the rendered dimensions.
+        const imgWidth = img.offsetWidth;
+        const imgHeight = img.offsetHeight;
+
+        // If dimensions are valid, generate a non-overlapping position.
+        if (imgWidth && imgHeight) {
+          const pos = getNonOverlappingPosition(imgWidth, imgHeight);
+          img.style.left = pos.left + 'px';
+          img.style.top = pos.top + 'px';
+
+          // Save this image's bounding box for overlap checking.
+          placedPositions.push({
+            left: pos.left,
+            top: pos.top,
+            width: imgWidth,
+            height: imgHeight
+          });
+
+          // Optionally randomize the animation duration and delay.
+          img.style.animationDuration = (Math.random() * (15 - 8) + 8) + 's';
+          img.style.animationDelay = (Math.random() * 5) + 's';
+        }
+      };
+
+      floatingContainer.appendChild(img);
+    }
+
+    // If a bot is specified and its images exist in the map, create floating images.
     if (botName && imageMap[botName]) {
       imageMap[botName].forEach(src => {
-        const img = document.createElement('img');
-        img.src = src;
-        img.className = 'floating-img';
-
-        // Get a non-overlapping position.
-        const pos = getNonOverlappingPosition(IMAGE_WIDTH, IMAGE_HEIGHT);
-        img.style.left = pos.left + 'px';
-        img.style.top = pos.top + 'px';
-
-        // Save this box's position for later collision checks.
-        placedPositions.push({
-          left: pos.left,
-          top: pos.top,
-          width: IMAGE_WIDTH,
-          height: IMAGE_HEIGHT
-        });
-
-        // Optionally randomize the animation duration and delay.
-        img.style.animationDuration = (Math.random() * (15 - 8) + 8) + 's';
-        img.style.animationDelay = (Math.random() * 5) + 's';
-
-        floatingContainer.appendChild(img);
+        createFloatingImage(src);
       });
     }
 
-    // When the Discord button is clicked, open the Discord invite in a new tab.
+    // Open the Discord invite in a new tab when the button is clicked.
     const discordButton = document.querySelector('.flex.items-center button');
     discordButton.addEventListener('click', function() {
       window.open('https://discord.gg/JXcEeqcehZ', '_blank');
