@@ -29,8 +29,8 @@
     .floating-img {
       position: absolute;
       animation: floatAnimation 10s ease-in-out infinite;
-      opacity: 0.7;
-      width: 600px; /* Increased size from 100px to 200px */
+      opacity: 0.4; /* Less transparency */
+      width: 600px;  /* Fixed width for all images */
     }
     @keyframes floatAnimation {
       0%   { transform: translateY(0) rotate(0deg); }
@@ -117,15 +117,19 @@
     // Get the floating container element.
     const floatingContainer = document.getElementById('floating-container');
 
+    // Calculate maximum positions so that the 600px wide image fits fully on screen.
+    const maxLeft = window.innerWidth - 600;
+    const maxTop = window.innerHeight - 600;
+
     // If a bot is specified and its images exist in the map, create floating image elements.
     if (botName && imageMap[botName]) {
       imageMap[botName].forEach(src => {
         const img = document.createElement('img');
         img.src = src;
         img.className = 'floating-img';
-        // Randomize its position on the viewport.
-        img.style.left = randomBetween(0, 100) + 'vw';
-        img.style.top = randomBetween(0, 100) + 'vh';
+        // Randomize its position in pixels so the whole image remains visible.
+        img.style.left = randomBetween(0, maxLeft) + 'px';
+        img.style.top = randomBetween(0, maxTop) + 'px';
         // Optionally randomize animation duration and delay.
         img.style.animationDuration = randomBetween(8, 15) + 's';
         img.style.animationDelay = randomBetween(0, 5) + 's';
