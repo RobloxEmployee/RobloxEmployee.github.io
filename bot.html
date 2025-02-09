@@ -28,9 +28,9 @@
     /* Style for each floating image */
     .floating-img {
       position: absolute;
+      /* Remove randomness from animation timing */
       animation: floatAnimation 10s ease-in-out infinite;
       opacity: 0.4;
-      /* No fixed width/height so images keep their natural dimensions */
     }
     @keyframes floatAnimation {
       0%   { transform: translateY(0) rotate(0deg); }
@@ -112,79 +112,67 @@
     // Get the floating container element.
     const floatingContainer = document.getElementById('floating-container');
 
-    // Array to keep track of placed image bounding boxes.
-    const placedPositions = [];
-
-    // Helper function to check if two rectangles overlap.
-    function isOverlapping(boxA, boxB) {
-      return !(
-        boxA.left + boxA.width <= boxB.left ||
-        boxB.left + boxB.width <= boxA.left ||
-        boxA.top + boxA.height <= boxB.top ||
-        boxB.top + boxB.height <= boxA.top
-      );
-    }
-
-    // Generate a random non-overlapping position for an image with given dimensions.
-    function getNonOverlappingPosition(imgWidth, imgHeight) {
-      const maxLeft = window.innerWidth - imgWidth;
-      const maxTop = window.innerHeight - imgHeight;
-      let left, top;
-      let attempts = 0;
-      do {
-        left = Math.random() * maxLeft;
-        top = Math.random() * maxTop;
-        attempts++;
-        if (attempts > 1000) break; // prevent infinite loops
-      } while (
-        placedPositions.some(box =>
-          isOverlapping(box, { left, top, width: imgWidth, height: imgHeight })
-        )
-      );
-      return { left, top };
-    }
-
-    // Create and position an image element.
-    function createFloatingImage(src) {
+    // Create and position an image element in a grid layout.
+    function createFloatingImage(src, index, columns, rows) {
       const img = document.createElement('img');
       img.src = src;
       img.className = 'floating-img';
-      
-      // Once the image loads, measure its dimensions and position it.
+      // Set fixed animation values (remove randomness here)
+      img.style.animationDuration = '10s';
+      img.style.animationDelay = '0s';
+      // Tag the image with its index for later repositioning on window resize.
+      img.dataset.index = index;
+
       img.onload = function() {
-        // Use the rendered dimensions.
-        const imgWidth = img.offsetWidth;
-        const imgHeight = img.offsetHeight;
-
-        // If dimensions are valid, generate a non-overlapping position.
-        if (imgWidth && imgHeight) {
-          const pos = getNonOverlappingPosition(imgWidth, imgHeight);
-          img.style.left = pos.left + 'px';
-          img.style.top = pos.top + 'px';
-
-          // Save this image's bounding box for overlap checking.
-          placedPositions.push({
-            left: pos.left,
-            top: pos.top,
-            width: imgWidth,
-            height: imgHeight
-          });
-
-          // Optionally randomize the animation duration and delay.
-          img.style.animationDuration = (Math.random() * (15 - 8) + 8) + 's';
-          img.style.animationDelay = (Math.random() * 5) + 's';
-        }
+        positionImage(img, index, columns, rows);
       };
 
       floatingContainer.appendChild(img);
     }
 
-    // If a bot is specified and its images exist in the map, create floating images.
+    // Compute and apply the grid-based position for an image.
+    function positionImage(img, index, columns, rows) {
+      const cellWidth = window.innerWidth / columns;
+      const cellHeight = window.innerHeight / rows;
+      // Use natural dimensions to calculate a scale factor so the image fits inside its cell (with some margin).
+      const naturalWidth = img.naturalWidth;
+      const naturalHeight = img.naturalHeight;
+      const scale = Math.min(1, (cellWidth * 0.8) / naturalWidth, (cellHeight * 0.8) / naturalHeight);
+      const finalWidth = naturalWidth * scale;
+      const finalHeight = naturalHeight * scale;
+      img.style.width = finalWidth + 'px';
+      img.style.height = finalHeight + 'px';
+      // Compute the grid position.
+      const col = index % columns;
+      const row = Math.floor(index / columns);
+      const left = col * cellWidth + (cellWidth - finalWidth) / 2;
+      const top = row * cellHeight + (cellHeight - finalHeight) / 2;
+      img.style.left = left + 'px';
+      img.style.top = top + 'px';
+    }
+
+    // If a bot is specified and its images exist in the map, create floating images in a grid.
     if (botName && imageMap[botName]) {
-      imageMap[botName].forEach(src => {
-        createFloatingImage(src);
+      const imagesArray = imageMap[botName];
+      const numImages = imagesArray.length;
+      // Determine grid dimensions (using a roughly square grid).
+      const columns = Math.ceil(Math.sqrt(numImages));
+      const rows = Math.ceil(numImages / columns);
+      imagesArray.forEach((src, index) => {
+        createFloatingImage(src, index, columns, rows);
       });
     }
+
+    // Recalculate positions on window resize to ensure images remain well placed.
+    window.addEventListener('resize', () => {
+      const images = document.querySelectorAll('.floating-img');
+      const numImages = images.length;
+      const columns = Math.ceil(Math.sqrt(numImages));
+      const rows = Math.ceil(numImages / columns);
+      images.forEach((img, index) => {
+        positionImage(img, index, columns, rows);
+      });
+    });
 
     // Open the Discord invite in a new tab when the button is clicked.
     const discordButton = document.querySelector('.flex.items-center button');
@@ -194,3 +182,4 @@
   </script>
 </body>
 </html>
+
