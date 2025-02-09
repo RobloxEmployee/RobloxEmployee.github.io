@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Bot - Discord Server</title>
-  <!-- Tailwind CSS for the button styling -->
+  <!-- Tailwind CSS for button styling -->
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
@@ -12,21 +12,42 @@
       background: #23272a;
       color: #e0e0e0;
       margin: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      text-align: center;
+      position: relative;
+      overflow: hidden;
     }
+    /* Fullscreen background container for floating images */
+    #floating-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      pointer-events: none;
+    }
+    /* Style for each floating image */
+    .floating-img {
+      position: absolute;
+      animation: floatAnimation 10s ease-in-out infinite;
+      opacity: 0.7;
+      width: 100px; /* Adjust as needed */
+    }
+    @keyframes floatAnimation {
+      0%   { transform: translateY(0) rotate(0deg); }
+      50%  { transform: translateY(-20px) rotate(10deg); }
+      100% { transform: translateY(0) rotate(0deg); }
+    }
+    /* Main content container */
     .container {
       background: rgba(54, 57, 63, 0.85);
       padding: 20px;
       border-radius: 8px;
       box-shadow: 0 8px 16px rgba(0,0,0,0.6);
       max-width: 600px;
-      margin: 20px;
+      margin: 20px auto;
       position: relative;
-      overflow: hidden;
+      z-index: 1;
+      text-align: center;
     }
     h1 {
       color: #00FF00;
@@ -35,27 +56,15 @@
     p {
       margin-bottom: 20px;
     }
-    /* Floating Animation */
-    @keyframes float {
-      0% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
-      100% { transform: translateY(0); }
-    }
-    .floating-image {
-      animation: float 3s ease-in-out infinite;
-      max-width: 150px;
-      margin: 0 auto 20px auto;
-      display: block;
-    }
   </style>
 </head>
 <body>
+  <!-- Background container for floating images -->
+  <div id="floating-container"></div>
+  
   <div class="container">
-    <!-- Bot Image -->
-    <img id="bot-image" class="floating-image" src="images/default-bot.png" alt="Bot Image">
     <h1 id="bot-name">Bot</h1>
     <p>This bot is in the Discord server.</p>
-    <!-- Discord Button -->
     <div class="flex items-center justify-center">
       <button class="flex items-center bg-white border border-gray-300 rounded-lg shadow-md px-6 py-2 text-sm font-medium text-gray-800 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
         <svg class="h-6 w-6 mr-2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -68,16 +77,21 @@
       </button>
     </div>
   </div>
-
+  
   <script>
-    // Helper function to choose a random element from an array.
-    function getRandomImage(images) {
-      return images[Math.floor(Math.random() * images.length)];
+    // Helper function for a random number between min and max.
+    function randomBetween(min, max) {
+      return Math.random() * (max - min) + min;
     }
-
+    
     // Retrieve the "bot" query parameter from the URL.
     const urlParams = new URLSearchParams(window.location.search);
     const botName = urlParams.get('bot');
+
+    // Update the bot name in the main container.
+    if (botName) {
+      document.getElementById('bot-name').textContent = botName;
+    }
 
     // Mapping for each bot type to its corresponding images.
     const imageMap = {
@@ -100,12 +114,23 @@
       ]
     };
 
-    // If a bot is specified in the URL, update the heading and image.
-    if (botName) {
-      document.getElementById('bot-name').textContent = botName;
-      if (imageMap[botName]) {
-        document.getElementById('bot-image').src = getRandomImage(imageMap[botName]);
-      }
+    // Get the floating container element.
+    const floatingContainer = document.getElementById('floating-container');
+
+    // If a bot is specified and its images exist in the map, create floating image elements.
+    if (botName && imageMap[botName]) {
+      imageMap[botName].forEach(src => {
+        const img = document.createElement('img');
+        img.src = src;
+        img.className = 'floating-img';
+        // Randomize its position on the viewport.
+        img.style.left = randomBetween(0, 100) + 'vw';
+        img.style.top = randomBetween(0, 100) + 'vh';
+        // Optionally randomize animation duration and delay.
+        img.style.animationDuration = randomBetween(8, 15) + 's';
+        img.style.animationDelay = randomBetween(0, 5) + 's';
+        floatingContainer.appendChild(img);
+      });
     }
 
     // When the Discord button is clicked, open the Discord invite in a new tab.
