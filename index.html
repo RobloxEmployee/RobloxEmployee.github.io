@@ -58,16 +58,34 @@
       max-width: 600px;
       margin: 0 auto;
     }
-    /* Discord Button Section (using Tailwind classes from the snippet) */
-    .discord-button {
-      padding: 20px;
+    /* Button Styling */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 0.5rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: #333;
+      transition: background 0.3s;
+    }
+    .btn:hover {
+      background: #e5e7eb;
+    }
+    /* Socials Section */
+    .socials {
+      padding: 2rem 0;
+      text-align: center;
     }
   </style>
 </head>
 <body>
   <!-- Top Navigation Bar -->
   <nav>
-    <!-- Each of these links can point to a dedicated page (for example, bot.html or tracker.html) -->
+    <!-- Each of these links can point to a dedicated page -->
     <a href="bot.html?bot=Doors%20UGC%20%26%20Badge%20Notifier" title="Doors UGC & Badge Notifier">Doors UGC & Badge Notifier</a>
     <a href="bot.html?bot=Doors%20API" title="Doors API">Doors API</a>
     <a href="bot.html?bot=Doors%20Twitter" title="Doors Twitter">Doors Twitter</a>
@@ -81,33 +99,76 @@
     <h1>RobloxEmployee</h1>
     <p>
       Hello! I'm RobloxEmployee, I make cool API bots.
-      I create bots and tools so you get all the doors info before anyone else, so join our discord below to try out for yourself.
+      I create bots and tools so you get all the doors info before anyone else.
+      Join our Discord below to try it out for yourself.
     </p>
   </section>
 
   <!-- Discord Button Section -->
-  <section class="discord-button">
+  <section class="discord-button py-4">
     <div class="flex items-center justify-center">
-      <button
-          class="flex items-center bg-white border border-gray-300 rounded-lg shadow-md px-6 py-2 text-sm font-medium text-gray-800 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
-         
-          <svg class="h-6 w-6 mr-2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-              width="800px" height="800px" viewBox="0 -28.5 256 256" version="1.1" preserveAspectRatio="xMidYMid">
-              <g>
-                  <path
-                      d="M216.856339,16.5966031 C200.285002,8.84328665 182.566144,3.2084988 164.041564,0 C161.766523,4.11318106 159.108624,9.64549908 157.276099,14.0464379 C137.583995,11.0849896 118.072967,11.0849896 98.7430163,14.0464379 C96.9108417,9.64549908 94.1925838,4.11318106 91.8971895,0 C73.3526068,3.2084988 55.6133949,8.86399117 39.0420583,16.6376612 C5.61752293,67.146514 -3.4433191,116.400813 1.08711069,164.955721 C23.2560196,181.510915 44.7403634,191.567697 65.8621325,198.148576 C71.0772151,190.971126 75.7283628,183.341335 79.7352139,175.300261 C72.104019,172.400575 64.7949724,168.822202 57.8887866,164.667963 C59.7209612,163.310589 61.5131304,161.891452 63.2445898,160.431257 C105.36741,180.133187 151.134928,180.133187 192.754523,160.431257 C194.506336,161.891452 196.298154,163.310589 198.110326,164.667963 C191.183787,168.842556 183.854737,172.420929 176.223542,175.320965 C180.230393,183.341335 184.861538,190.991831 190.096624,198.16893 C211.238746,191.588051 232.743023,181.531619 254.911949,164.955721 C260.227747,108.668201 245.831087,59.8662432 216.856339,16.5966031 Z M85.4738752,135.09489 C72.8290281,135.09489 62.4592217,123.290155 62.4592217,108.914901 C62.4592217,94.5396472 72.607595,82.7145587 85.4738752,82.7145587 C98.3405064,82.7145587 108.709962,94.5189427 108.488529,108.914901 C108.508531,123.290155 98.3405064,135.09489 85.4738752,135.09489 Z M170.525237,135.09489 C157.88039,135.09489 147.510584,123.290155 147.510584,108.914901 C147.510584,94.5396472 157.658606,82.7145587 170.525237,82.7145587 C183.391518,82.7145587 193.761324,94.5189427 193.539891,108.914901 C193.539891,123.290155 183.391518,135.09489 170.525237,135.09489 Z"
-                      fill="#5865F2" fill-rule="nonzero"></path>
-              </g>
-          </svg>
-          <span>Continue with Discord</span>
+      <button id="discord-btn" class="btn">
+        <!-- Discord Icon -->
+        <svg class="h-6 w-6 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 -28.5 256 256" version="1.1" preserveAspectRatio="xMidYMid">
+          <g>
+            <path d="M216.856339,16.5966031 C200.285002,8.84328665 182.566144,3.2084988 164.041564,0 C161.766523,4.11318106 159.108624,9.64549908 157.276099,14.0464379 C137.583995,11.0849896 118.072967,11.0849896 98.7430163,14.0464379 C96.9108417,9.64549908 94.1925838,4.11318106 91.8971895,0 C73.3526068,3.2084988 55.6133949,8.86399117 39.0420583,16.6376612 C5.61752293,67.146514 -3.4433191,116.400813 1.08711069,164.955721 C23.2560196,181.510915 44.7403634,191.567697 65.8621325,198.148576 C71.0772151,190.971126 75.7283628,183.341335 79.7352139,175.300261 C72.104019,172.400575 64.7949724,168.822202 57.8887866,164.667963 C59.7209612,163.310589 61.5131304,161.891452 63.2445898,160.431257 C105.36741,180.133187 151.134928,180.133187 192.754523,160.431257 C194.506336,161.891452 196.298154,163.310589 198.110326,164.667963 C191.183787,168.842556 183.854737,172.420929 176.223542,175.320965 C180.230393,183.341335 184.861538,190.991831 190.096624,198.16893 C211.238746,191.588051 232.743023,181.531619 254.911949,164.955721 C260.227747,108.668201 245.831087,59.8662432 216.856339,16.5966031 Z M85.4738752,135.09489 C72.8290281,135.09489 62.4592217,123.290155 62.4592217,108.914901 C62.4592217,94.5396472 72.607595,82.7145587 85.4738752,82.7145587 C98.3405064,82.7145587 108.709962,94.5189427 108.488529,108.914901 C108.508531,123.290155 98.3405064,135.09489 85.4738752,135.09489 Z M170.525237,135.09489 C157.88039,135.09489 147.510584,123.290155 147.510584,108.914901 C147.510584,94.5396472 157.658606,82.7145587 170.525237,82.7145587 C183.391518,82.7145587 193.761324,94.5189427 193.539891,108.914901 C193.539891,123.290155 183.391518,135.09489 170.525237,135.09489 Z" fill="#5865F2"></path>
+          </g>
+        </svg>
+        <span>Continue with Discord</span>
       </button>
     </div>
   </section>
 
+  <!-- Socials Section -->
+  <section class="socials">
+    <h2 class="text-2xl font-semibold mb-4" style="color:#00FF00;">Follow Me</h2>
+    <div class="flex items-center justify-center space-x-4">
+      <!-- Discord Social Button -->
+      <a href="https://discord.gg/JXcEeqcehZ" target="_blank" class="btn">
+        <!-- Discord Icon (reuse the same as above) -->
+        <svg class="h-6 w-6 mr-2" xmlns="http://www.w3.org/2000/svg" viewBox="0 -28.5 256 256" version="1.1" preserveAspectRatio="xMidYMid">
+          <g>
+            <path d="M216.856339,16.5966031 C200.285002,8.84328665 182.566144,3.2084988 164.041564,0 C161.766523,4.11318106 159.108624,9.64549908 157.276099,14.0464379 C137.583995,11.0849896 118.072967,11.0849896 98.7430163,14.0464379 C96.9108417,9.64549908 94.1925838,4.11318106 91.8971895,0 C73.3526068,3.2084988 55.6133949,8.86399117 39.0420583,16.6376612 C5.61752293,67.146514 -3.4433191,116.400813 1.08711069,164.955721 C23.2560196,181.510915 44.7403634,191.567697 65.8621325,198.148576 C71.0772151,190.971126 75.7283628,183.341335 79.7352139,175.300261 C72.104019,172.400575 64.7949724,168.822202 57.8887866,164.667963 C59.7209612,163.310589 61.5131304,161.891452 63.2445898,160.431257 C105.36741,180.133187 151.134928,180.133187 192.754523,160.431257 C194.506336,161.891452 196.298154,163.310589 198.110326,164.667963 C191.183787,168.842556 183.854737,172.420929 176.223542,175.320965 C180.230393,183.341335 184.861538,190.991831 190.096624,198.16893 C211.238746,191.588051 232.743023,181.531619 254.911949,164.955721 C260.227747,108.668201 245.831087,59.8662432 216.856339,16.5966031 Z M85.4738752,135.09489 C72.8290281,135.09489 62.4592217,123.290155 62.4592217,108.914901 C62.4592217,94.5396472 72.607595,82.7145587 85.4738752,82.7145587 C98.3405064,82.7145587 108.709962,94.5189427 108.488529,108.914901 C108.508531,123.290155 98.3405064,135.09489 85.4738752,135.09489 Z M170.525237,135.09489 C157.88039,135.09489 147.510584,123.290155 147.510584,108.914901 C147.510584,94.5396472 157.658606,82.7145587 170.525237,82.7145587 C183.391518,82.7145587 193.761324,94.5189427 193.539891,108.914901 C193.539891,123.290155 183.391518,135.09489 170.525237,135.09489 Z" fill="#5865F2"></path>
+          </g>
+        </svg>
+        <span>Discord</span>
+      </a>
+
+      <!-- YouTube Social Button -->
+      <a href="https://www.youtube.com/@RobloxEmployee" target="_blank" class="btn">
+        <!-- YouTube Icon -->
+        <svg role="img" viewBox="0 0 24 24" class="h-6 w-6 mr-2" xmlns="http://www.w3.org/2000/svg">
+          <path fill="#FF0000" d="M23.498 6.186a2.99 2.99 0 0 0-2.107-2.107C19.59 3.5 12 3.5 12 3.5s-7.59 0-9.391.579A2.99 2.99 0 0 0 .502 6.186 31.53 31.53 0 0 0 0 12a31.53 31.53 0 0 0 .502 5.814 2.99 2.99 0 0 0 2.107 2.107C4.41 20.5 12 20.5 12 20.5s7.59 0 9.391-.579a2.99 2.99 0 0 0 2.107-2.107A31.53 31.53 0 0 0 24 12a31.53 31.53 0 0 0-.502-5.814zM9.545 15.568V8.432L15.818 12z"/>
+        </svg>
+        <span>YouTube</span>
+      </a>
+
+      <!-- X Social Button -->
+      <a href="https://x.com/RobloxEmployeYT" target="_blank" class="btn">
+        <!-- Simple "X" Icon -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" viewBox="0 0 24 24">
+          <line x1="4" y1="4" x2="20" y2="20" stroke="#000" stroke-width="2"/>
+          <line x1="20" y1="4" x2="4" y2="20" stroke="#000" stroke-width="2"/>
+        </svg>
+        <span>X</span>
+      </a>
+
+      <!-- Roblox Social Button -->
+      <a href="https://www.roblox.com/users/3536463964/profile" target="_blank" class="btn">
+        <!-- Roblox Icon: A red square with an "R" -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" viewBox="0 0 24 24">
+          <rect width="24" height="24" fill="#E02020" rx="4"/>
+          <text x="12" y="16" text-anchor="middle" fill="#ffffff" font-size="12" font-family="Arial" font-weight="bold">R</text>
+        </svg>
+        <span>Roblox</span>
+      </a>
+    </div>
+  </section>
+
   <script>
-    // When the Discord button is clicked, open your Discord invite in a new tab.
-    const discordButton = document.querySelector('.discord-button button');
-    discordButton.addEventListener('click', function() {
+    // When the Discord button (above the socials section) is clicked, open the Discord invite in a new tab.
+    const discordBtn = document.getElementById('discord-btn');
+    discordBtn.addEventListener('click', function() {
       window.open('https://discord.gg/JXcEeqcehZ', '_blank');
     });
   </script>
