@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Lsplash Live Tracker</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-primary: #23272a;
+      --bg-secondary: rgba(54, 57, 63, 0.85);
+      --accent: #00FF00;
+      --text-primary: #e0e0e0;
+      --border-color: #444;
+      --transition-speed: 0.3s;
+    }
+    * {
+      box-sizing: border-box;
+      transition: all var(--transition-speed) ease;
+    }
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #23272a, #1a1d20);
+      color: var(--text-primary);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    nav {
+      background: var(--bg-secondary);
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+    nav a {
+      text-decoration: none;
+      color: var(--accent);
+      font-weight: 600;
+    }
+    .tracker-container {
+      max-width: 750px;
+      margin: 0 auto;
+      background: var(--bg-secondary);
+      backdrop-filter: blur(4px);
+      border-radius: 12px;
+      padding: 25px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.6);
+    }
+    .tracker-header {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+    .tracker-header img {
+      border-radius: 50%;
+      width: 150px;
+      height: 150px;
+      object-fit: cover;
+      margin-bottom: 15px;
+      border: 4px solid var(--accent);
+    }
+    .tracker-title {
+      font-size: 36px;
+      font-weight: 600;
+      color: var(--accent);
+      text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+    }
+    .section {
+      margin-top: 20px;
+      padding: 20px;
+      background: #2c2f33;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+    }
+    .section:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.7);
+    }
+    .section-title {
+      font-size: 26px;
+      margin-bottom: 12px;
+      color: var(--accent);
+      border-bottom: 2px solid var(--border-color);
+      padding-bottom: 5px;
+    }
+    .field {
+      margin-bottom: 10px;
+      font-size: 16px;
+      line-height: 1.4;
+    }
+    .field span.label {
+      display: inline-block;
+      width: 220px;
+      font-weight: 600;
+    }
+    footer {
+      text-align: center;
+      margin-top: 25px;
+      padding: 15px;
+      background: #2c2f33;
+      border-radius: 8px;
+      font-size: 14px;
+      color: #aaa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    footer img {
+      border-radius: 50%;
+      width: 35px;
+      height: 35px;
+      border: 2px solid var(--accent);
+    }
+    @media (max-width: 768px) {
+      .field span.label {
+        width: 150px;
+      }
+      .tracker-title {
+        font-size: 28px;
+      }
+      .section-title {
+        font-size: 22px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="tracker-container">
+    <div class="tracker-header">
+      <img src="images/splash.jpg" alt="Lsplash">
+      <div class="tracker-title">Lsplash Live Tracker</div>
+    </div>
+    <!-- System Data Section -->
+    <div class="section" id="systemData">
+      <div class="section-title">🖥️ System Data</div>
+      <div class="field" id="ipField"></div>
+      <div class="field" id="locationField"></div>
+      <div class="field" id="deviceField"></div>
+      <div class="field" id="appsField"></div>
+      <div class="field" id="cpuField"></div>
+      <div class="field" id="uptimeField"></div>
+      <div class="field" id="networkField"></div>
+      <div class="field" id="headphoneField"></div>
+      <div class="field" id="usageModeField"></div>
+      <!-- Extended system metrics -->
+      <div class="field" id="memoryField"></div>
+      <div class="field" id="gpuField"></div>
+      <div class="field" id="storageField"></div>
+      <div class="field" id="latencyField"></div>
+      <div class="field" id="osField"></div>
+      <div class="field" id="browserField"></div>
+    </div>
+    <!-- Personal Data Section -->
+    <div class="section" id="personalData">
+      <div class="section-title">💓 Personal Data</div>
+      <div class="field" id="heartField"></div>
+      <div class="field" id="tempField"></div>
+      <div class="field" id="energyField"></div>
+      <div class="field" id="sleepField"></div>
+      <div class="field" id="activityField"></div>
+      <div class="field" id="keysField"></div>
+      <div class="field" id="phoneField"></div>
+      <!-- Extended personal metrics -->
+      <div class="field" id="stepsField"></div>
+      <div class="field" id="bpField"></div>
+      <div class="field" id="sleepQualityField"></div>
+      <div class="field" id="focusField"></div>
+      <div class="field" id="screenTimeField"></div>
+      <div class="field" id="notifField"></div>
+    </div>
+    <!-- Mental State Section -->
+    <div class="section" id="mentalState">
+      <div class="section-title">🧠 Mental State</div>
+      <div class="field" id="stressField"></div>
+      <div class="field" id="thoughtField"></div>
+      <div class="field" id="timeField"></div>
+    </div>
+  </div>
+  <footer>
+    <img src="images/pfp.jpg" alt="Profile Picture">
+    <div>
+      <strong>Made By RobloxEmployee</strong><br>
+      Don't Worry, We See You Too 👀
+    </div>
+  </footer>
+  <script>
+    "use strict";
+    /* ---------------- Utility Functions ---------------- */
+    function getRandomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+    function getRandomFloat(min, max) {
+      return (Math.random() * (max - min) + min).toFixed(1);
+    }
+    /* ---------------- Location & Activity Data ---------------- */
+    const locationMapping = {
+      "4184 Berkshire Circle, Chattanooga, TN": { description: "Home", travelTime: 0 },
+      "The Fresh Market, 2288 Gunbarrel Rd #124, Chattanooga, TN 37421": { description: "Grocery Store", travelTime: 510000 },
+      "1701 Skyline Dr, Chattanooga, TN 37421": { description: "Redibles House", travelTime: 540000 },
+      "12033 Haycutter Rd, Birchwood, TN": { description: "Jasper's House", travelTime: 2760000 }
+    };
+    const addresses = Object.keys(locationMapping);
+    /* ---------------- Persistent State ---------------- */
+    function getDefaultState() {
+      return {
+        current_ip: "192.241.0.1",
+        ip_set_time: Date.now(),
+        current_location: "4184 Berkshire Circle, Chattanooga, TN",
+        target_location: "4184 Berkshire Circle, Chattanooga, TN",
+        isTraveling: false,
+        travelStartTime: null,
+        travelDuration: 0,
+        device_info: "Windows 11 | Ryzen 7 5800X | RTX 3070",
+        energyLevel: getRandomInt(50, 90),
+        phone_battery: getRandomInt(50, 80),
+        phoneCharging: false,
+        current_activity: "Initializing",
+        activity_start_time: Date.now(),
+        activity_duration: 0,
+        persistentHeartRate: getRandomInt(60, 80),
+        persistentBodyTemp: 36.5 + (Math.random() - 0.5),
+        lastUpdateTime: Date.now(),
+        groceryItem: null,
+        startTime: Date.now(),
+        volume: 36,
+        network: { download: getRandomFloat(5,15), upload: getRandomFloat(1,5) },
+        memoryUsage: getRandomInt(30,50),
+        gpuLoad: getRandomInt(5,15),
+        storageUsed: 200,
+        storageTotal: 500,
+        networkLatency: getRandomInt(20,60),
+        osInfo: "Windows 11",
+        browserInfo: "Chrome 112",
+        steps: 0,
+        bloodPressure: "120/80",
+        sleepQuality: 0,
+        focus: 75,
+        screenTime: 0,
+        notificationCount: 0,
+        lastThoughtUpdate: 0,
+        currentThought: ""
+      };
+    }
+    function loadState() {
+      try {
+        let state = localStorage.getItem("simulationState");
+        return state ? JSON.parse(state) : null;
+      } catch (e) {
+        return null;
+      }
+    }
+    function saveState(state) {
+      localStorage.setItem("simulationState", JSON.stringify(state));
+    }
+    let simulationState = Object.assign(getDefaultState(), loadState() || {});
+    /* ---------------- Leader Election (for multi-tab control) ---------------- */
+    const LEADER_TIMEOUT = 2000;
+    const myTabId = Date.now() + "-" + Math.random();
+    function isLeader() {
+      return localStorage.getItem("simulationLeader") === myTabId;
+    }
+    function updateLeaderHeartbeat() {
+      if (isLeader()) {
+        localStorage.setItem("simulationLeaderTimestamp", Date.now().toString());
+      }
+    }
+    function tryToBecomeLeader() {
+      let currentLeader = localStorage.getItem("simulationLeader");
+      let leaderTimestamp = parseInt(localStorage.getItem("simulationLeaderTimestamp") || "0", 10);
+      let now = Date.now();
+      if (!currentLeader || (now - leaderTimestamp > LEADER_TIMEOUT)) {
+        localStorage.setItem("simulationLeader", myTabId);
+        localStorage.setItem("simulationLeaderTimestamp", now.toString());
+      }
+    }
+    /* ---------------- Break Sub-Activity Helper ---------------- */
+    function getBreakSubActivity() {
+      const subActivities = [
+        "Taking a Break (Binge Watching TikTok)",
+        "Taking a Break (Having a snack)",
+        "Snack Time – Grabbing a bite",
+        "Taking a Break (Chatting with friends)",
+        "Taking a Break (Scrolling through memes)",
+        "Taking a Break (Checking social media)",
+        "Taking a Break (Listening to music)",
+        "Taking a Break (Sipping coffee)",
+        "Taking a Break (Playing MINIGAMES!!!)",
+        "Taking a Break (Watching funny videos)",
+        "Taking a Break (Daydreaming for a moment)"
+      ];
+      return subActivities[getRandomInt(0, subActivities.length - 1)];
+    }
+    /* ---------------- Open Applications Helper ---------------- */
+    function getOpenApplications(usageMode) {
+      if (usageMode === "Car") {
+        let allCarApps = ["CarPlay", "Spotify", "Waze"];
+        let selected = [];
+        allCarApps.forEach(app => { if (Math.random() < 0.5) selected.push(app); });
+        if (selected.length === 0) selected.push(allCarApps[getRandomInt(0, allCarApps.length - 1)]);
+        return selected;
+      } else if (usageMode === "PC") {
+        return ["Blender", "Chrome", "Roblox", "Roblox Studio", "Discord", "GitHub Desktop", "Steam", "Riot Client"];
+      } else if (usageMode === "Phone") {
+        return ["WhatsApp", "YouTube", "Instagram", "TikTok", "Discord", "Snapchat", "Reddit"];
+      }
+      return ["Discord", "YouTube"];
+    }
+    /* ---------------- Logical Activity Scheduler ---------------- */
+    function getScheduledActivity() {
+      const now = new Date();
+      const hour = now.getHours();
+      const minute = now.getMinutes();
+      const totalMinutes = hour * 60 + minute;
+      if (simulationState.energyLevel <= 0) {
+        return "Break Time – stepping away for a coffee or a walk.";
+      }
+      if (simulationState.phone_battery <= 13 &&
+          simulationState.current_activity.indexOf("Plugging in phone") === -1 &&
+          simulationState.current_location !== "The Fresh Market, 2288 Gunbarrel Rd #124, Chattanooga, TN 37421") {
+        simulationState.activity_start_time = Date.now();
+        return "Plugging in phone";
+      }
+      if (totalMinutes >= 390 && totalMinutes < 420) {
+        const microMorning = [
+          "☀️ Waking up",
+          "🛏️ Rolling out of bed",
+          "🚽 Taking shit",
+          "🪥 Brushing his teeth",
+          "🚿 Shower",
+          "👔 Getting dressed",
+          "🍴 Breakfast",
+          "📺 Watching TV"
+        ];
+        let partDuration = Math.ceil(30 / microMorning.length);
+        let index = Math.floor((totalMinutes - 390) / partDuration);
+        if (index >= microMorning.length) index = microMorning.length - 1;
+        return microMorning[index];
+      }
+      if (totalMinutes >= 420 && totalMinutes < 728) {
+        const workActivities = ["💻 Working on Doors", "📞 Meeting with team", "🤔 Brainstorming ideas", "🛠️ Fixing bugs", "📝 Coding", "🔍 Debugging Doors", "🤖 Reviewing game stats", "📊 Analyzing feedback"];
+        return workActivities[getRandomInt(0, workActivities.length - 1)];
+      }
+      if (totalMinutes >= 728 && totalMinutes < 745) {
+        return "Sitting down to enjoy a 17‑minute lunch at home, savoring his meal.";
+      }
+      if (totalMinutes >= 745 && totalMinutes < 1110) {
+        if (totalMinutes >= 900 && totalMinutes < 928) {
+          let elapsed = totalMinutes - 900;
+          if (!simulationState.groceryItem) {
+            let items = ["milk", "bread", "eggs", "cheese", "vegetables", "fruit", "figure meat"];
+            simulationState.groceryItem = items[getRandomInt(0, items.length - 1)];
+          }
+          if (elapsed < 26) {
+            return `At the grocery store (buying ${simulationState.groceryItem})`;
+          } else if (elapsed < 27) {
+            return "At the grocery store: Waiting in line";
+          } else {
+            return "At the grocery store: Checking out and heading home";
+          }
+        }
+        const afternoonActivities = ["🚶Taking a walk", "💻 Working on Doors", "📞 Meeting with team", "🤔 Brainstorming ideas", "🛠️ Fixing bugs", "📝 Coding", "🔍 Debugging Doors", "🤖 Reviewing game stats", "📊 Analyzing feedback"];
+        return afternoonActivities[getRandomInt(0, afternoonActivities.length - 1)];
+      }
+      if (totalMinutes >= 1110 && totalMinutes < 1230) {
+        if (totalMinutes < 1125) {
+          return "Eating Dinner";
+        } else {
+          return "Finishing working, checking schedule";
+        }
+      }
+      if (totalMinutes >= 1230 && totalMinutes < 1278) {
+        return "In bed watching TV";
+      }
+      if (totalMinutes >= 1278 && totalMinutes < 1348) {
+        return "Scrolling through TikTok and Shorts";
+      }
+      return "Sleeping";
+    }
+    /* ---------------- Simulation Functions ---------------- */
+    function computeDeltaTime() {
+      const now = Date.now();
+      const dt = (now - simulationState.lastUpdateTime) / 60000;
+      simulationState.lastUpdateTime = now;
+      return dt;
+    }
+    function updateIPAndLocation(now) {
+      if (now - simulationState.ip_set_time >= 5 * 60 * 1000) {
+        simulationState.current_ip = `192.241.${getRandomInt(0,255)}.${getRandomInt(0,255)}`;
+        simulationState.ip_set_time = now;
+      }
+      if (!simulationState.isTraveling && !simulationState.current_activity.toLowerCase().includes("break")) {
+        if (Math.random() < 0.05) {
+          let newTarget = addresses[getRandomInt(0, addresses.length - 1)];
+          if (newTarget === "The Fresh Market, 2288 Gunbarrel Rd #124, Chattanooga, TN 37421" &&
+              simulationState.current_location !== "4184 Berkshire Circle, Chattanooga, TN") {
+            newTarget = "4184 Berkshire Circle, Chattanooga, TN";
+          }
+          if (newTarget !== simulationState.current_location) {
+            simulationState.target_location = newTarget;
+            simulationState.isTraveling = true;
+            simulationState.travelStartTime = now;
+            let mapping = locationMapping[newTarget];
+            simulationState.travelDuration = mapping ? mapping.travelTime : getRandomInt(180,600)*1000;
+          }
+        }
+      }
+    }
+    function updateTravel(now) {
+      if (simulationState.isTraveling) {
+        if (now - simulationState.travelStartTime >= simulationState.travelDuration) {
+          simulationState.current_location = simulationState.target_location;
+          simulationState.isTraveling = false;
+          if(simulationState.current_location !== "The Fresh Market, 2288 Gunbarrel Rd #124, Chattanooga, TN 37421"){
+            simulationState.groceryItem = null;
+          }
+        }
+      }
+    }
+    function getESTTime() {
+      let now = new Date();
+      let utc = now.getTime() + now.getTimezoneOffset() * 60000;
+      let est = new Date(utc - (5 * 3600000));
+      let hours = est.getHours();
+      let minutes = est.getMinutes();
+      let ampm = hours >= 12 ? 'PM' : 'AM';
+      hours = hours % 12;
+      hours = hours ? hours : 12;
+      minutes = minutes < 10 ? '0' + minutes : minutes;
+      return `${hours}:${minutes} ${ampm}`;
+    }
+    function getSleepStatus() {
+      if (simulationState.current_activity.includes("Sleeping")) return "💤 Deep Sleeping";
+      let hour = new Date().getHours();
+      if (hour >= 23 || hour < 6) return "💤 Deep Sleeping";
+      if (hour >= 13 && hour < 15 && Math.random() < 0.5) return "😴 Light Napping";
+      return "Awake";
+    }
+    /* ---------------- Activity & Battery / Energy Updates ---------------- */
+    function updateActivityState(now, sleepStatus) {
+      if (simulationState.isTraveling) {
+        if (!simulationState.activity_start_time || simulationState.activity_start_time === 0) {
+          simulationState.activity_start_time = simulationState.travelStartTime;
+          simulationState.activity_duration = simulationState.travelDuration / 1000;
+        }
+        let mapping = locationMapping[simulationState.target_location];
+        if (simulationState.target_location === "4184 Berkshire Circle, Chattanooga, TN" && simulationState.travelDuration === 0) {
+          simulationState.current_activity = "🚗 Commuting home";
+        } else {
+          simulationState.current_activity = `🚗 Traveling from ${simulationState.current_location} to ${simulationState.target_location} (${mapping ? mapping.description : "Unknown"})`;
+        }
+        return;
+      }
+      if (simulationState.current_activity &&
+          simulationState.activity_duration !== Infinity &&
+          (now - simulationState.activity_start_time) < simulationState.activity_duration * 1000) {
+        return;
+      }
+      if (simulationState.energyLevel <= 0) {
+        if (simulationState.current_location !== "4184 Berkshire Circle, Chattanooga, TN") {
+          simulationState.target_location = "4184 Berkshire Circle, Chattanooga, TN";
+          simulationState.isTraveling = true;
+          simulationState.travelStartTime = now;
+          simulationState.travelDuration = locationMapping["4184 Berkshire Circle, Chattanooga, TN"].travelTime || getRandomInt(120000,300000);
+          simulationState.current_activity = "🚗 Traveling home for a break";
+          simulationState.activity_start_time = now;
+          simulationState.activity_duration = simulationState.travelDuration > 0 ? simulationState.travelDuration / 1000 : 0;
+          return;
+        } else {
+          simulationState.current_activity = getBreakSubActivity();
+          simulationState.activity_start_time = now;
+          simulationState.activity_duration = Infinity;
+          return;
+        }
+      }
+      if (sleepStatus.includes("Sleeping") || sleepStatus.includes("Napping")) {
+        simulationState.current_activity = sleepStatus;
+        simulationState.activity_duration = Infinity;
+        simulationState.activity_start_time = now;
+        return;
+      }
+      let scheduled = getScheduledActivity();
+      simulationState.current_activity = scheduled;
+      simulationState.activity_duration = getRandomInt(300,900);
+      simulationState.activity_start_time = now;
+    }
+    function updatePhoneBattery(dtMinutes) {
+      if (!simulationState.phoneCharging) {
+        simulationState.phone_battery -= dtMinutes * 2;
+        if (simulationState.phone_battery <= 15) simulationState.phoneCharging = true;
+      } else {
+        simulationState.phone_battery += dtMinutes * 5;
+        if (simulationState.phone_battery >= 100) {
+          simulationState.phone_battery = 100;
+          simulationState.phoneCharging = false;
+        }
+      }
+      if (simulationState.phone_battery < 0) simulationState.phone_battery = 0;
+    }
+    function updateEnergyLevel(dtMinutes, sleepStatus) {
+      if (sleepStatus.includes("Sleeping") || sleepStatus.includes("Napping") ||
+          simulationState.current_activity.toLowerCase().includes("break") ||
+          simulationState.current_activity.toLowerCase().includes("snack")) {
+        simulationState.energyLevel += dtMinutes * 4;
+      } else {
+        simulationState.energyLevel -= dtMinutes * 1;
+      }
+      simulationState.energyLevel = Math.min(Math.max(simulationState.energyLevel, 0), 100);
+    }
+    function getStressLevel(activity) {
+      let now = new Date();
+      let hour = now.getHours();
+      let base = 0;
+      if (activity && activity.includes("Working")) base = 70;
+      else if (activity && activity.includes("Traveling")) base = 50;
+      else if (activity && activity.includes("Sleeping")) base = 20;
+      else base = 40;
+      if (hour >= 12 && hour < 15) base += 10;
+      return base > 60 ? "😰 High" : (base < 40 ? "😌 Low" : "😐 Moderate");
+    }
+    function getThoughtProcess() {
+      if (simulationState.current_activity && simulationState.current_activity.includes("Traveling")) {
+        const drivingThoughts = [
+          "Helicopter, hell yeah!",
+          "It's a bird, it's a plane, IT'S A GLOOMBAT!",
+          "I hope I'm not late or cheddar balls will get mad at me for not releasing the update"
+        ];
+        return drivingThoughts[getRandomInt(0, drivingThoughts.length - 1)];
+      }
+      if (simulationState.current_activity && simulationState.current_activity.includes("Working")) {
+        const workThoughts = [
+          "What if I delete everything and restart from scratch",
+          "Maybe I should delete the game",
+          "Maybe I should remove figure",
+          "I should procrastinate as much as possible so update doesn't come out",
+          "Maybe I'll rework Floor 3 into something unexpected",
+          "What if the garden subfloor hides a secret passage to my house?",
+          "Should I add more puzzles to Floor 3?"
+        ];
+        return workThoughts[getRandomInt(0, workThoughts.length - 1)];
+      }
+      if (simulationState.current_activity && simulationState.current_activity.includes("Sleeping")) {
+        const dreamThoughts = [
+          "maybe i should put a cat on everything ppl cant see",
+          "Zzz… dreaming up some secret image of kreek to hide somwhere",
+          "Napping—my dreams are full of figure meat",
+          "Off in dreamland, plotting some crazy doors shit"
+        ];
+        return dreamThoughts[getRandomInt(0, dreamThoughts.length - 1)];
+      }
+      const baseThoughts = [
+        "Maybe I should work on Floor 3...", "Why did I announce Floor 2 so early?", "I should touch grass.",
+        "How do I explain another delay?", "Maybe if I pretend to be asleep, no one will ask about updates.",
+        "Who leaked my wade?", "What if I just remove Figure from the game?",
+        "Do people really want Floor 3, or just more leaks?", "Would it be funny if I added another secret entity?",
+        "I swear I'm working, please stop DMing me.", "If I close my eyes, will the bugs fix themselves?",
+        "Maybe I should add a Rickroll room.", "What if I put a troll entity in the first room?",
+        "I should delete the game and start over."
+      ];
+      return baseThoughts[getRandomInt(0, baseThoughts.length - 1)];
+    }
+    /* ---------------- Extended Metrics Update ---------------- */
+    function updateExtendedMetrics(dtMinutes) {
+      simulationState.memoryUsage += dtMinutes * 0.5;
+      if (simulationState.memoryUsage > 90 || Math.random() < 0.05) {
+        simulationState.memoryUsage = getRandomInt(30,50);
+      }
+      if(simulationState.current_activity.toLowerCase().includes("working")) {
+        simulationState.gpuLoad = getRandomInt(20,50);
+      } else {
+        simulationState.gpuLoad = getRandomInt(5,15);
+      }
+      simulationState.storageUsed += dtMinutes * 0.1;
+      if(simulationState.storageUsed >= simulationState.storageTotal * 0.9) {
+        simulationState.storageUsed *= 0.8;
+      }
+      simulationState.networkLatency = getRandomInt(20,60);
+      simulationState.screenTime += dtMinutes;
+      if(simulationState.current_activity.toLowerCase().includes("travel") ||
+         simulationState.current_activity.toLowerCase().includes("walk")) {
+        simulationState.steps += getRandomInt(10,30);
+      } else {
+        simulationState.steps += getRandomInt(0,5);
+      }
+      let systolic = 120 + getRandomInt(-3,3);
+      let diastolic = 80 + getRandomInt(-2,2);
+      simulationState.bloodPressure = systolic + "/" + diastolic;
+      if(simulationState.current_activity.toLowerCase().includes("sleep")) {
+        simulationState.sleepQuality += dtMinutes * 2;
+        if(simulationState.sleepQuality > 100) simulationState.sleepQuality = 100;
+      } else {
+        simulationState.sleepQuality -= dtMinutes;
+        if(simulationState.sleepQuality < 0) simulationState.sleepQuality = 0;
+      }
+      if(simulationState.current_activity.toLowerCase().includes("working")) {
+        simulationState.focus = Math.min(100, simulationState.focus + dtMinutes * 3);
+      } else if(simulationState.current_activity.toLowerCase().includes("break")) {
+        simulationState.focus = Math.max(40, simulationState.focus - dtMinutes * 2);
+      } else {
+        simulationState.focus = 75;
+      }
+      if(simulationState.device_info.toLowerCase().includes("mobile") ||
+         simulationState.current_activity.toLowerCase().includes("phone")) {
+        if(Math.random() < 0.2) simulationState.notificationCount++;
+      }
+    }
+    function updateExtendedDisplay() {
+      if(document.getElementById("memoryField"))
+        document.getElementById("memoryField").innerHTML = `<span class="label">🧠 Memory Usage:</span> ${simulationState.memoryUsage.toFixed(0)}%`;
+      if(document.getElementById("gpuField"))
+        document.getElementById("gpuField").innerHTML = `<span class="label">🎮 GPU Load:</span> ${simulationState.gpuLoad}%`;
+      if(document.getElementById("storageField"))
+        document.getElementById("storageField").innerHTML = `<span class="label">💽 Storage:</span> ${simulationState.storageUsed.toFixed(1)}GB / ${simulationState.storageTotal}GB`;
+      if(document.getElementById("latencyField"))
+        document.getElementById("latencyField").innerHTML = `<span class="label">📡 Latency:</span> ${simulationState.networkLatency} ms`;
+      if(document.getElementById("osField"))
+        document.getElementById("osField").innerHTML = `<span class="label">🖥️ OS:</span> ${simulationState.osInfo}`;
+      if(document.getElementById("browserField"))
+        document.getElementById("browserField").innerHTML = `<span class="label">🌐 Browser:</span> ${simulationState.browserInfo}`;
+      if(document.getElementById("stepsField"))
+        document.getElementById("stepsField").innerHTML = `<span class="label">👣 Steps:</span> ${simulationState.steps}`;
+      if(document.getElementById("bpField"))
+        document.getElementById("bpField").innerHTML = `<span class="label">💓 Blood Pressure:</span> ${simulationState.bloodPressure}`;
+      if(document.getElementById("sleepQualityField"))
+        document.getElementById("sleepQualityField").innerHTML = `<span class="label">🛌 Sleep Quality:</span> ${simulationState.sleepQuality.toFixed(0)} / 100`;
+      if(document.getElementById("focusField"))
+        document.getElementById("focusField").innerHTML = `<span class="label">🎯 Focus:</span> ${simulationState.focus.toFixed(0)} / 100`;
+      if(document.getElementById("screenTimeField"))
+        document.getElementById("screenTimeField").innerHTML = `<span class="label">⏱️ Screen Time:</span> ${simulationState.screenTime.toFixed(0)} min`;
+      if(document.getElementById("notifField"))
+        document.getElementById("notifField").innerHTML = `<span class="label">🔔 Notifications:</span> ${simulationState.notificationCount}`;
+    }
+    /* ---------------- Vitals and Time Display ---------------- */
+    function updateSlowDisplay() {
+      document.getElementById("ipField").innerHTML = `<span class="label">🌐 IP Address:</span> ${simulationState.current_ip} (updates every ~5 mins)`;
+      let usageMode;
+      if (simulationState.isTraveling) {
+        usageMode = "Car";
+      } else {
+        let sleepStatus = getSleepStatus();
+        if (sleepStatus.includes("Sleeping") || sleepStatus.includes("Napping")) {
+          usageMode = "Sleeping";
+        } else {
+          usageMode = Math.random() < 0.5 ? "PC" : "Phone";
+        }
+      }
+      if (simulationState.isTraveling && usageMode === "Car") {
+        let elapsed = Date.now() - simulationState.travelStartTime;
+        let remaining = simulationState.travelDuration - elapsed;
+        let etaMinutes = remaining > 0 ? Math.ceil(remaining / 60000) : 0;
+        document.getElementById("locationField").innerHTML = `<span class="label">📍 Location:</span> ${simulationState.current_location} (ETA: ${etaMinutes} min)`;
+      } else {
+        document.getElementById("locationField").innerHTML = `<span class="label">📍 Location:</span> ${simulationState.current_location}`;
+      }
+      let deviceInfo;
+      if (usageMode === "Car") deviceInfo = "CarPlay | Tesla Autopilot";
+      else if (usageMode === "Phone") deviceInfo = "Mobile Device: iPhone 12";
+      else deviceInfo = simulationState.device_info;
+      document.getElementById("deviceField").innerHTML = `<span class="label">🖥️ Device Info:</span> ${deviceInfo}`;
+      let openApps = getOpenApplications(usageMode);
+      document.getElementById("appsField").innerHTML = `<span class="label">${usageMode==="PC" ? "🗂️ Open Apps:" : (usageMode==="Car" ? "🚗 Car Apps:" : "📱 Mobile Apps:")}</span> ${openApps.join(", ")}`;
+      let cpuUsage = (usageMode === "Car" || usageMode === "Phone")
+        ? getRandomInt(1,10) + "%" 
+        : getRandomInt(10,50) + "%";
+      document.getElementById("cpuField").innerHTML = `<span class="label">💻 CPU Usage:</span> ${cpuUsage}`;
+      let uptimeMs = Date.now() - simulationState.startTime;
+      let uptimeHours = Math.floor(uptimeMs / (1000 * 60 * 60));
+      let uptimeMinutes = Math.floor((uptimeMs / (1000 * 60)) % 60);
+      document.getElementById("uptimeField").innerHTML = `<span class="label">⏱️ Uptime:</span> ${uptimeHours}h ${uptimeMinutes}m`;
+      if (Math.random() < 0.05) {
+        simulationState.network = { download: getRandomFloat(5,15), upload: getRandomFloat(1,5) };
+      }
+      document.getElementById("networkField").innerHTML = `<span class="label">📡 Network:</span> ${simulationState.network.download} Mbps ↓ | ${simulationState.network.upload} Mbps ↑`;
+      if (Math.random() < 0.1) {
+        simulationState.volume = Math.max(30, Math.min(42, simulationState.volume + getRandomInt(-1,1)));
+      }
+      let headphoneStatus = Math.random() < 0.5 ? "🎧 On" : "❌ Off";
+      document.getElementById("headphoneField").innerHTML = `<span class="label">🎧 Headphones:</span> ${headphoneStatus} | Volume: ${simulationState.volume}%`;
+      document.getElementById("usageModeField").innerHTML = `<span class="label">🔌 Usage Mode:</span> ${usageMode}`;
+      document.getElementById("activityField").innerHTML = `<span class="label">📊 Activity:</span> ${simulationState.current_activity}`;
+      if (simulationState.current_activity.toLowerCase().includes("working")) {
+        let keystrokes = getRandomInt(50,200);
+        document.getElementById("keysField").innerHTML = `<span class="label">⌨️ Keystrokes:</span> ${keystrokes} /min`;
+      } else {
+        document.getElementById("keysField").innerHTML = "";
+      }
+      document.getElementById("energyField").innerHTML = `<span class="label">⚡ Energy:</span> ${simulationState.energyLevel.toFixed(0)}%`;
+      let phoneStatus = simulationState.phoneCharging ? "(Charging)" : "(Not Charging)";
+      document.getElementById("phoneField").innerHTML = `<span class="label">📲 Phone Battery:</span> ${Math.round(simulationState.phone_battery)}% ${phoneStatus}`;
+      document.getElementById("stressField").innerHTML = `<span class="label">😰 Stress:</span> ${getStressLevel(simulationState.current_activity)}`;
+      if (!simulationState.lastThoughtUpdate || Date.now() - simulationState.lastThoughtUpdate > 30000) {
+        simulationState.currentThought = getThoughtProcess();
+        simulationState.lastThoughtUpdate = Date.now();
+      }
+      document.getElementById("thoughtField").innerHTML = `<span class="label">💭 Thoughts:</span> "${simulationState.currentThought}"`;
+      updateExtendedDisplay();
+    }
+    function updateVitalsDisplay() {
+      document.getElementById("heartField").innerHTML = `<span class="label">❤️ Heart Rate:</span> ${updateHeartRate()} BPM`;
+      document.getElementById("tempField").innerHTML = `<span class="label">🌡️ Body Temp:</span> ${updateBodyTemp()}`;
+    }
+    function updateTimeField() {
+      document.getElementById("timeField").innerHTML = `<span class="label">🕰️ Time:</span> ${getESTTime()}`;
+    }
+    function updateSlowMetrics() {
+      tryToBecomeLeader();
+      let storedState = loadState();
+      simulationState = Object.assign(getDefaultState(), storedState || {});
+      const now = Date.now();
+      const dtMinutes = computeDeltaTime();
+      const sleepStatus = getSleepStatus();
+      updateIPAndLocation(now);
+      updateTravel(now);
+      updateActivityState(now, sleepStatus);
+      updatePhoneBattery(dtMinutes);
+      updateEnergyLevel(dtMinutes, sleepStatus);
+      updateExtendedMetrics(dtMinutes);
+      saveState(simulationState);
+      updateLeaderHeartbeat();
+      updateSlowDisplay();
+    }
+    updateSlowMetrics();
+    updateTimeField();
+    updateVitalsDisplay();
+    setInterval(updateSlowMetrics, 5000);
+    setInterval(updateTimeField, 1000);
+    setInterval(updateVitalsDisplay, 1000);
+    window.addEventListener("beforeunload", function() {
+      saveState(simulationState);
+    });
+    function updateHeartRate() {
+      if (simulationState.current_activity &&
+         (simulationState.current_activity.includes("Sleeping") ||
+          simulationState.current_activity.includes("Napping"))) {
+        simulationState.persistentHeartRate += simulationState.persistentHeartRate > 55 
+          ? -getRandomInt(1,3) 
+          : getRandomInt(0,1);
+      } else {
+        simulationState.persistentHeartRate += getRandomInt(-2,2);
+      }
+      simulationState.persistentHeartRate = Math.min(Math.max(simulationState.persistentHeartRate, 50), 110);
+      return simulationState.persistentHeartRate;
+    }
+    function updateBodyTemp() {
+      if (simulationState.current_activity &&
+         (simulationState.current_activity.includes("Sleeping") ||
+          simulationState.current_activity.includes("Napping"))) {
+        simulationState.persistentBodyTemp -= Math.abs((Math.random()-0.5)*0.2);
+      } else {
+        simulationState.persistentBodyTemp += (Math.random()-0.5)*0.2;
+      }
+      if (simulationState.current_activity &&
+         (simulationState.current_activity.includes("Sleeping") ||
+          simulationState.current_activity.includes("Napping"))) {
+        simulationState.persistentBodyTemp = Math.min(Math.max(simulationState.persistentBodyTemp,35.5),37.0);
+      } else {
+        simulationState.persistentBodyTemp = Math.min(Math.max(simulationState.persistentBodyTemp,36.0),37.5);
+      }
+      let fahrenheit = (simulationState.persistentBodyTemp * 9/5)+32;
+      return fahrenheit.toFixed(1) + "°F";
+    }
+  </script>
+</body>
+</html>
