@@ -29,7 +29,7 @@
     .floating-img {
       position: absolute;
       animation: floatAnimation 10s ease-in-out infinite;
-      opacity: 0.4; /* Less transparency */
+      opacity: 0.4;
       width: 600px;  /* Fixed width for all images */
     }
     @keyframes floatAnimation {
@@ -79,11 +79,6 @@
   </div>
   
   <script>
-    // Helper function for a random number between min and max.
-    function randomBetween(min, max) {
-      return Math.random() * (max - min) + min;
-    }
-    
     // Retrieve the "bot" query parameter from the URL.
     const urlParams = new URLSearchParams(window.location.search);
     const botName = urlParams.get('bot');
@@ -117,22 +112,91 @@
     // Get the floating container element.
     const floatingContainer = document.getElementById('floating-container');
 
-    // Calculate maximum positions so that the 600px wide image fits fully on screen.
-    const maxLeft = window.innerWidth - 600;
-    const maxTop = window.innerHeight - 600;
+    // Calculate fixed positions based on the number of images to avoid overlap.
+    function getFixedPositions(count) {
+      const positions = [];
+      // Maximum allowed left and top values so the 600px image remains fully visible.
+      const maxLeft = window.innerWidth - 600;
+      const maxTop = window.innerHeight - 600;
+
+      if (count === 1) {
+        // Center the single image.
+        positions.push({
+          left: maxLeft / 2,
+          top: maxTop / 2
+        });
+      } else if (count === 2) {
+        // Place one image toward the left and one toward the right.
+        positions.push({
+          left: maxLeft / 4,
+          top: maxTop / 2
+        });
+        positions.push({
+          left: (maxLeft * 3) / 4,
+          top: maxTop / 2
+        });
+      } else if (count === 3) {
+        // Arrange in a triangular layout.
+        positions.push({
+          left: maxLeft / 2,
+          top: maxTop / 4
+        });
+        positions.push({
+          left: maxLeft / 4,
+          top: (maxTop * 3) / 4
+        });
+        positions.push({
+          left: (maxLeft * 3) / 4,
+          top: (maxTop * 3) / 4
+        });
+      } else {
+        // For 4 or more images, use a 2x2 grid layout.
+        positions.push({
+          left: maxLeft / 4,
+          top: maxTop / 4
+        });
+        positions.push({
+          left: (maxLeft * 3) / 4,
+          top: maxTop / 4
+        });
+        positions.push({
+          left: maxLeft / 4,
+          top: (maxTop * 3) / 4
+        });
+        positions.push({
+          left: (maxLeft * 3) / 4,
+          top: (maxTop * 3) / 4
+        });
+      }
+      return positions;
+    }
 
     // If a bot is specified and its images exist in the map, create floating image elements.
     if (botName && imageMap[botName]) {
-      imageMap[botName].forEach(src => {
+      const images = imageMap[botName];
+      const positions = getFixedPositions(images.length);
+
+      images.forEach((src, index) => {
         const img = document.createElement('img');
         img.src = src;
         img.className = 'floating-img';
-        // Randomize its position in pixels so the whole image remains visible.
-        img.style.left = randomBetween(0, maxLeft) + 'px';
-        img.style.top = randomBetween(0, maxTop) + 'px';
-        // Optionally randomize animation duration and delay.
-        img.style.animationDuration = randomBetween(8, 15) + 's';
-        img.style.animationDelay = randomBetween(0, 5) + 's';
+
+        // Use the fixed positions so images don't overlap too much.
+        if (positions[index]) {
+          img.style.left = positions[index].left + 'px';
+          img.style.top = positions[index].top + 'px';
+        } else {
+          // Fallback: if more images than positions, use a random position within bounds.
+          const maxLeft = window.innerWidth - 600;
+          const maxTop = window.innerHeight - 600;
+          img.style.left = Math.random() * maxLeft + 'px';
+          img.style.top = Math.random() * maxTop + 'px';
+        }
+
+        // Optionally randomize the animation duration and delay.
+        img.style.animationDuration = (Math.random() * (15 - 8) + 8) + 's';
+        img.style.animationDelay = (Math.random() * 5) + 's';
+
         floatingContainer.appendChild(img);
       });
     }
@@ -145,3 +209,4 @@
   </script>
 </body>
 </html>
+
