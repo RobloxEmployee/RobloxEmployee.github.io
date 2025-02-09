@@ -31,6 +31,7 @@
       animation: floatAnimation 10s ease-in-out infinite;
       opacity: 0.4;
       width: 600px;  /* Fixed width for all images */
+      height: 600px; /* Fixed height so we can do collision detection */
     }
     @keyframes floatAnimation {
       0%   { transform: translateY(0) rotate(0deg); }
@@ -112,86 +113,60 @@
     // Get the floating container element.
     const floatingContainer = document.getElementById('floating-container');
 
-    // Calculate fixed positions based on the number of images to avoid overlap.
-    function getFixedPositions(count) {
-      const positions = [];
-      // Maximum allowed left and top values so the 600px image remains fully visible.
-      const maxLeft = window.innerWidth - 600;
-      const maxTop = window.innerHeight - 600;
+    // Array to keep track of placed image boxes.
+    const placedPositions = [];
+    const IMAGE_WIDTH = 600;
+    const IMAGE_HEIGHT = 600;
 
-      if (count === 1) {
-        // Center the single image.
-        positions.push({
-          left: maxLeft / 2,
-          top: maxTop / 2
-        });
-      } else if (count === 2) {
-        // Place one image toward the left and one toward the right.
-        positions.push({
-          left: maxLeft / 4,
-          top: maxTop / 2
-        });
-        positions.push({
-          left: (maxLeft * 3) / 4,
-          top: maxTop / 2
-        });
-      } else if (count === 3) {
-        // Arrange in a triangular layout.
-        positions.push({
-          left: maxLeft / 2,
-          top: maxTop / 4
-        });
-        positions.push({
-          left: maxLeft / 4,
-          top: (maxTop * 3) / 4
-        });
-        positions.push({
-          left: (maxLeft * 3) / 4,
-          top: (maxTop * 3) / 4
-        });
-      } else {
-        // For 4 or more images, use a 2x2 grid layout.
-        positions.push({
-          left: maxLeft / 4,
-          top: maxTop / 4
-        });
-        positions.push({
-          left: (maxLeft * 3) / 4,
-          top: maxTop / 4
-        });
-        positions.push({
-          left: maxLeft / 4,
-          top: (maxTop * 3) / 4
-        });
-        positions.push({
-          left: (maxLeft * 3) / 4,
-          top: (maxTop * 3) / 4
-        });
-      }
-      return positions;
+    // Helper function to check if two boxes overlap.
+    function isOverlapping(boxA, boxB) {
+      return !(
+        boxA.left + boxA.width <= boxB.left ||
+        boxB.left + boxB.width <= boxA.left ||
+        boxA.top + boxA.height <= boxB.top ||
+        boxB.top + boxB.height <= boxA.top
+      );
+    }
+
+    // Generate a random position that does not overlap with any existing boxes.
+    function getNonOverlappingPosition(imageWidth, imageHeight) {
+      const maxLeft = window.innerWidth - imageWidth;
+      const maxTop = window.innerHeight - imageHeight;
+      let left, top;
+      let attempts = 0;
+      do {
+        left = Math.random() * maxLeft;
+        top = Math.random() * maxTop;
+        attempts++;
+        // If too many attempts, break out to avoid an infinite loop.
+        if (attempts > 1000) break;
+      } while (
+        placedPositions.some(box =>
+          isOverlapping(box, { left, top, width: imageWidth, height: imageHeight })
+        )
+      );
+      return { left, top };
     }
 
     // If a bot is specified and its images exist in the map, create floating image elements.
     if (botName && imageMap[botName]) {
-      const images = imageMap[botName];
-      const positions = getFixedPositions(images.length);
-
-      images.forEach((src, index) => {
+      imageMap[botName].forEach(src => {
         const img = document.createElement('img');
         img.src = src;
         img.className = 'floating-img';
 
-        // Use the fixed positions so images don't overlap too much.
-        if (positions[index]) {
-          img.style.left = positions[index].left + 'px';
-          img.style.top = positions[index].top + 'px';
-        } else {
-          // Fallback: if more images than positions, use a random position within bounds.
-          const maxLeft = window.innerWidth - 600;
-          const maxTop = window.innerHeight - 600;
-          img.style.left = Math.random() * maxLeft + 'px';
-          img.style.top = Math.random() * maxTop + 'px';
-        }
+        // Get a non-overlapping position.
+        const pos = getNonOverlappingPosition(IMAGE_WIDTH, IMAGE_HEIGHT);
+        img.style.left = pos.left + 'px';
+        img.style.top = pos.top + 'px';
+
+        // Save this box's position for later collision checks.
+        placedPositions.push({
+          left: pos.left,
+          top: pos.top,
+          width: IMAGE_WIDTH,
+          height: IMAGE_HEIGHT
+        });
 
         // Optionally randomize the animation duration and delay.
         img.style.animationDuration = (Math.random() * (15 - 8) + 8) + 's';
@@ -209,4 +184,3 @@
   </script>
 </body>
 </html>
-
