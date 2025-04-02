@@ -126,6 +126,10 @@
         font-size: 22px;
       }
     }
+    /* Optional: style for clicked emoji */
+    .clickable-emoji.clicked {
+      opacity: 0.4;
+    }
   </style>
 </head>
 <body>
@@ -787,7 +791,58 @@
       });
     });
   </script>
+ <script>
+    // Function to recursively wrap emoji characters in text nodes with clickable spans.
+    function wrapEmojis(node) {
+      if (node.nodeType === Node.TEXT_NODE) {
+        const emojiRegex = /([\u231A-\u27BF\u{1F300}-\u{1F5FF}\u{1F600}-\u{1F64F}\u{1F680}-\u{1F6FF}])/gu;
+        const text = node.nodeValue;
+        if (emojiRegex.test(text)) {
+          const span = document.createElement('span');
+          span.innerHTML = text.replace(emojiRegex, '<span class="clickable-emoji" style="cursor:pointer;">$1</span>');
+          node.parentNode.replaceChild(span, node);
+        }
+      } else {
+        node.childNodes.forEach(child => wrapEmojis(child));
+      }
+    }
+    document.addEventListener("DOMContentLoaded", function() {
+      wrapEmojis(document.body);
+
+      // Get all emoji spans.
+      const emojis = document.querySelectorAll('.clickable-emoji');
+      
+      // Function to check if all emojis have been clicked.
+      function checkAllClicked() {
+        let allClicked = true;
+        emojis.forEach(el => {
+          if (!el.classList.contains('clicked')) {
+            allClicked = false;
+          }
+        });
+        return allClicked;
+      }
+      
+      // Add click event listeners to each emoji.
+      emojis.forEach(el => {
+        el.addEventListener('click', function(event) {
+          // Prevent default behavior.
+          event.preventDefault();
+          // Mark emoji as clicked (if not already marked).
+          if (!el.classList.contains('clicked')) {
+            el.classList.add('clicked');
+          }
+          // Check if all emojis have been clicked.
+          if (checkAllClicked()) {
+            // Redirect to ??.html after a short delay to show feedback.
+            setTimeout(() => {
+              window.location.href = "??.html";
+            }, 300);
+          }
+        });
+      });
+    });
+  </script>
 </body>
 </html>
-</body>
-</html>
+
