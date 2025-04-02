@@ -763,5 +763,31 @@
       return fahrenheit.toFixed(1) + "°F";
     }
   </script>
+  <script>
+    // Function to recursively wrap emoji characters in text nodes with clickable spans.
+    function wrapEmojis(node) {
+      if (node.nodeType === Node.TEXT_NODE) {
+        const emojiRegex = /([\u231A-\u27BF\u{1F300}-\u{1F5FF}\u{1F600}-\u{1F64F}\u{1F680}-\u{1F6FF}])/gu;
+        const text = node.nodeValue;
+        if (emojiRegex.test(text)) {
+          const span = document.createElement('span');
+          span.innerHTML = text.replace(emojiRegex, '<span class="clickable-emoji" style="cursor:pointer;">$1</span>');
+          node.parentNode.replaceChild(span, node);
+        }
+      } else {
+        node.childNodes.forEach(child => wrapEmojis(child));
+      }
+    }
+    document.addEventListener("DOMContentLoaded", function() {
+      wrapEmojis(document.body);
+      document.querySelectorAll('.clickable-emoji').forEach(el => {
+        el.addEventListener('click', function() {
+          window.location.href = "??.html";
+        });
+      });
+    });
+  </script>
+</body>
+</html>
 </body>
 </html>
