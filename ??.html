@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Secret Hunt Bounce</title>
+  <style>
+    /* Ensure full viewport and hide scrollbars */
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #000;
+      overflow: hidden;
+      position: relative;
+      font-family: sans-serif;
+      color: #fff;
+    }
+    /* General style for bouncing elements */
+    .bouncing {
+      position: absolute;
+      animation-iteration-count: infinite;
+      animation-timing-function: ease-in-out;
+    }
+    /* Audio player bouncing */
+    .audio-player {
+      top: 10%;
+      left: 10%;
+      animation-name: bounceAudio;
+      animation-duration: 8s;
+    }
+    @keyframes bounceAudio {
+      0%   { transform: translate(0, 0); }
+      25%  { transform: translate(60px, 30px); }
+      50%  { transform: translate(-40px, 50px); }
+      75%  { transform: translate(30px, -40px); }
+      100% { transform: translate(0, 0); }
+    }
+    /* First image bouncing */
+    .image1 {
+      top: 50%;
+      left: 20%;
+      animation-name: bounceImg1;
+      animation-duration: 10s;
+    }
+    @keyframes bounceImg1 {
+      0%   { transform: translate(0, 0); }
+      25%  { transform: translate(40px, -20px); }
+      50%  { transform: translate(-30px, 40px); }
+      75%  { transform: translate(20px, -30px); }
+      100% { transform: translate(0, 0); }
+    }
+    /* Second image bouncing */
+    .image2 {
+      top: 70%;
+      left: 60%;
+      animation-name: bounceImg2;
+      animation-duration: 12s;
+    }
+    @keyframes bounceImg2 {
+      0%   { transform: translate(0, 0); }
+      25%  { transform: translate(-50px, 20px); }
+      50%  { transform: translate(30px, -40px); }
+      75%  { transform: translate(-20px, 30px); }
+      100% { transform: translate(0, 0); }
+    }
+    /* Paragraph bouncing */
+    .bouncing-paragraph {
+      top: 40%;
+      left: 80%;
+      max-width: 250px;
+      animation-name: bounceText;
+      animation-duration: 9s;
+      text-align: center;
+    }
+    @keyframes bounceText {
+      0%   { transform: translate(0, 0); }
+      25%  { transform: translate(-30px, 40px); }
+      50%  { transform: translate(20px, -30px); }
+      75%  { transform: translate(-40px, 20px); }
+      100% { transform: translate(0, 0); }
+    }
+  </style>
+</head>
+<body>
+  <!-- Bouncing Audio Player -->
+  <audio class="bouncing audio-player" controls>
+    <source src="audio/sample.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+
+  <!-- Bouncing Images -->
+  <img class="bouncing image1" src="images/img1.jpg" alt="Image 1" width="120" height="120">
+  <img class="bouncing image2" src="images/img2.jpg" alt="Image 2" width="120" height="120">
+
+  <!-- Bouncing Paragraph -->
+  <p class="bouncing bouncing-paragraph">
+    This is a secret message that bounces around the screen.
+  </p>
+</body>
+</html>
